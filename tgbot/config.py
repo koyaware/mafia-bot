@@ -19,15 +19,9 @@ class TgBot:
 
 
 @dataclass
-class Miscellaneous:
-    other_params: str = None
-
-
-@dataclass
 class Config:
     tg_bot: TgBot
     db: DbConfig
-    misc: Miscellaneous
 
 
 def load_config(path: str = None):
@@ -37,7 +31,7 @@ def load_config(path: str = None):
     return Config(
         tg_bot=TgBot(
             token=env.str("BOT_TOKEN"),
-            admin_ids=list(map(int, env.list("ADMINS"))),
+            admin_ids=list(map(int, env.str("ADMINS").split(","))),
             use_redis=env.bool("USE_REDIS"),
         ),
         db=DbConfig(
@@ -45,6 +39,5 @@ def load_config(path: str = None):
             password=env.str('DB_PASS'),
             user=env.str('DB_USER'),
             database=env.str('DB_NAME')
-        ),
-        misc=Miscellaneous()
+        )
     )
